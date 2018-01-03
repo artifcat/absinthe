@@ -5,16 +5,18 @@ html
     body
         h1= message
 
+        form(action="/add" method="POST" enctype="multipart/form-data")
+            input(id="image" name="image" type="file")
+            input(type="submit")
+
 
         script(src='js/jquery.min.js')
         script(src='js/underscore-min.js')
         script(src='js/backbone-min.js')
 
 
-        script.
-            var cats = !{data};
 
-        script(id='catTemplate' type='text/template')
-            <%= name %> is <%= color %> and weighs <%= weight %> kg
+        script.
+            var imageArray = !{imageArray};
 
         script(src='js/application.js')
