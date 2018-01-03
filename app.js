@@ -1,8 +1,11 @@
 //Packages
 var express = require('express');
+var Database = require('./modules/db.js');
 
 //Constants
 const port = 3000;
+const dburl = 'mongodb://localhost:27017/absinthe';
+const db = new Database(dburl);
 
 //Variables
 var app = express();
@@ -34,6 +37,7 @@ app.set('view engine', 'pug');
 
 
 app.get("/", function(req, res){
+    db.getPictures();
     res.render('index', { title: 'Hey', message: 'Hello there!', data: JSON.stringify(data)});
 });
 
