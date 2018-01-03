@@ -4,7 +4,10 @@ html
 
     body
         h1= message
-
+        if user 
+            a(href="/logout") Logout
+        else
+            a(href="/login") Login
         form(action="/add" method="POST" enctype="multipart/form-data")
             input(id="image" name="image" type="file")
             input(type="submit")

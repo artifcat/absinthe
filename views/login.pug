@@ -1,0 +1,12 @@
+html
+    head
+        title= title
+
+    body
+        .loginbox
+            .error= error
+            form(action="/login" method="POST")
+                input(id="username" name="username" type="text" placeholder="username")
+                input(id="password" name="password" type="password" placeholder="password")
+                input(type="submit" value="Log in")
+            a(href="/register") Register
