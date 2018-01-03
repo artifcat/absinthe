@@ -1,0 +1,27 @@
+{
+  "name": "absinthe",
+  "version": "1.0.0",
+  "description": "Booru-style imageboard written in node.js ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artifcat/absinthe.git"
+  },
+  "keywords": [
+    "booru"
+  ],
+  "author": "artifcat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/artifcat/absinthe/issues"
+  },
+  "homepage": "https://github.com/artifcat/absinthe#readme",
+  "dependencies": {
+    "backbone": "^1.3.3",
+    "express": "^4.16.2",
+    "pug": "^2.0.0-rc.4"
+  }
+}
