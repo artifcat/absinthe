@@ -11,7 +11,8 @@ module.exports = function(mongoose) {
     var Image = new Schema({
         filename            :   {type: String, index: true},
         id                  :   ObjectId,
-        thumbnail           :   {data: Buffer, contentType: String}
+        thumbnail           :   String,
+        uploader            :   {type: ObjectId, ref: User}
     });
 
     User.plugin(passportLocalMongoose);

@@ -1,1 +1,0 @@
-"M:\Program Files\MongoDB\Server\3.6\bin\mongod.exe" --dbpath "M:\Studia\PJA\TIN\mongo"
