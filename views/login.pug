@@ -1,12 +1,9 @@
-html
-    head
-        title= title
+extends layouts/centered.pug
 
-    body
-        .loginbox
-            .error= error
-            form(action="/login" method="POST")
-                input(id="username" name="username" type="text" placeholder="username")
-                input(id="password" name="password" type="password" placeholder="password")
-                input(type="submit" value="Log in")
-            a(href="/register") Register
+block content
+    h1 Log in
+    form(action="/account/login" method="POST")
+        input(id="username" name="username" type="text" placeholder="username")
+        input(id="password" name="password" type="password" placeholder="password")
+        input(type="submit" value="Log in")
+    p If you don't have an account, you can #[a.highlight(href="/account/register") register here]

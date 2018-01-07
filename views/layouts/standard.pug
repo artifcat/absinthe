@@ -1,0 +1,34 @@
+html
+    head
+        title= page.title
+        meta(charset='UTF8')
+        link(rel='stylesheet' type='text/css' href='/css/style.css')
+        block vars
+            - var bodyClass = ''
+    body(class=bodyClass)
+        .wrapper
+            block menu
+                .menu
+                    a(href="/") Images
+                    if user
+                        a(href="/upload") Upload image
+                        a(href="/account") Account
+                        a.right(href="/account/logout") Logout
+                        .right Hello #{user.username}
+
+                    else
+                        a.right(href="/account/login") Login
+                    .clear
+            if info && info !=''
+                .info= info
+            if error && error !=''
+                .error= error
+            .content
+                block content
+            
+        block scripts
+            script(src='js/jquery.min.js')
+            script(src='js/underscore-min.js')
+            script(src='js/backbone-min.js')
+
+            script(src='js/application.js')

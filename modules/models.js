@@ -8,21 +8,38 @@ module.exports = function(mongoose) {
     var User = new Schema({
         email               :   String,
     });
-    var Image = new Schema({
-        filename            :   {type: String, index: true},
-        id                  :   ObjectId,
-        thumbnail           :   String,
-        uploader            :   {type: ObjectId, ref: User}
+    var Tag = new Schema({
+        name                :   {type: String, index: true, required: 'Tag must have a name'},
+        imageCount          :   Number,
+        description         :   {type: String}
     });
+    var Comment = new Schema({
+        poster              :   {type: ObjectId, ref: User},
+        content             :   {type: String},
+    });
+    var Image = new Schema({
+        filename            :   {type: String, unique: true},
+        thumbnail           :   {type: Buffer},
+        uploader            :   {type: ObjectId, ref: User},
+        tags                :   [Tag]
+    });
+    var Album = new Schema({
+        creator             :   {type: ObjectId, ref: User},
+        title               :   {type: String},
+        images              :   [Image],
+        private             :   Boolean
+    });
+    
 
     User.plugin(passportLocalMongoose);
 
     var models = {
-      User  : mongoose.model('Users', User),
-      Image : mongoose.model('Images', Image),
+      User      :   mongoose.model('User', User),
+      Tag       :   mongoose.model('Tag', Tag),
+      Image     :   mongoose.model('Image', Image),
+      Comment   :   mongoose.model('Comment', Comment),
+      Album     :   mongoose.model('Album', Album),
     };
-
-    //console.log(User);
-
+    
     return models;
 }

@@ -1,25 +1,12 @@
-html
-    head
-        title= title
+extends layouts/standard.pug
 
-    body
-        if user 
-            a(href="/logout") Logout
-            form(action="/add" method="POST" enctype="multipart/form-data")
-                input(id="image" name="image" type="file")
-                input(type="submit")
-        else
-            a(href="/login") Login to upload
-        
+block append vars
+    - var bodyClass = bodyClass + 'Upload'
 
-
-        script(src='js/jquery.min.js')
-        script(src='js/underscore-min.js')
-        script(src='js/backbone-min.js')
-
-
-
-        script.
-            var imageArray = !{imageArray};
-
-        script(src='js/application.js')
+block content
+    form(action="/upload" method="POST" enctype="multipart/form-data")
+        label(for='tags') Tags (space separated)
+        textarea#tags(name="tags", cols="30", rows="5")
+        label(for='image') Select image file to upload
+        input#image(name="image" type="file")
+        input(type="submit" value='Upload')
