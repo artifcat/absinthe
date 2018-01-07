@@ -1,6 +1,6 @@
 extends layouts/standard.pug
 
-block append vars
+append vars
     - var bodyClass = bodyClass + 'Upload'
 
 block content
@@ -10,3 +10,6 @@ block content
         label(for='image') Select image file to upload
         input#image(name="image" type="file")
         input(type="submit" value='Upload')
+
+append scripts
+    script(src='js/imageUploadValidate.js')

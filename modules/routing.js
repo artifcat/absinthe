@@ -7,21 +7,26 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var flash = require('connect-flash');
+var sharp = require('sharp');
 
 var config = require('../config');
 
 var Storage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, config.imgpath + 'upload/');
+        callback(null, config.imgpath);
     },
     filename: function (req, file, callback) {
         var namesplit = file.originalname.split('.');
         callback(null, Date.now() + "." + namesplit[namesplit.length-1]);
     }
 });
-var tagPattern = new RegExp("[a-z-_/()]{3,}");
+var tagPattern = new RegExp("[0-9a-z-_/()]{3,}");
 var FileFilter = function (req, file, cb) {
-    
+    if(!file){
+        e = new Error('No file selected.');
+        e.type = 'no_file';
+        cb(e);
+    }
     if(req.body.tags){
         var tagList = req.body.tags.split(' ');
         for(tag in tagList){
@@ -32,6 +37,7 @@ var FileFilter = function (req, file, cb) {
                 cb(e);
             }
         }
+        req.tags = tagList;
         cb(null, true);
         return;
     }
@@ -142,11 +148,35 @@ module.exports = {
         });
 
         app.post("/upload", uploadManager.single('image'), function(req, res){
+            var thumb;
+            if(req.file){
+                sharp(config.imgpath + req.file.filename).resize(config.thumbsize).jpeg().toBuffer(function(err, data, info){
+                    if (err) return console.error(err);
+                    var newImg = Models.Image({filename: req.file.filename, thumbnail: data, tags: req.tags, uploader: req.user._id});
+                    newImg.save(function (err, newImg) {
+                        if (err) return console.error(err);
+                        req.flash('info', "Image uploaded");
+                        //TODO: redirect to uploaded image view
+                        res.redirect('/');
+                    });
+                });  
+            }
+            else{
+                res.status(500).end();
+            }
+
+        });
+
+        //api
+        app.get('/api/thumb/:id', function(req, res){
+            Models.Image.findById(req.params.id, function(err, image){
+                if(err) console.error(err);
+                if(image){
+                    res.setHeader('Content-Type', 'image/jpeg');
+                    res.send(image.thumbnail);
+                }
+            });
             
-            //var newImg = Models.Image({filename: req.file.filename, tags: [], uploader: req.user._id});
-            //TODO: redirect to uploaded image view
-            //req.flash('info', "Image uploaded");
-            res.redirect('/');
         });
 
         //error handling
@@ -157,6 +187,10 @@ module.exports = {
             }
             else if (err.type == 'no_tags'){
                 req.flash('error', "No tags supplied. Please provide at least one tag for the image.");
+                res.redirect(req.originalUrl);
+            }
+            else if (err.type == 'no_file'){
+                req.flash('error', "No file was selected.");
                 res.redirect(req.originalUrl);
             }
             else {

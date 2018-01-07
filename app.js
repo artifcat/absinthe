@@ -3,8 +3,6 @@ var express = require('express');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
-var thumb = require('node-thumbnail').thumb;
-
 var LocalStrategy = require('passport-local').Strategy;
 
 var Models = require('./modules/models.js')(mongoose);
