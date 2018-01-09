@@ -1,1 +1,12 @@
 extends layouts/standard.pug
+
+append content
+    .filters
+        input#tags(type='text')
+        button(onclick='search()') Search
+    .grid
+    .clear
+
+
+append scripts
+    script(src='js/images.js')

@@ -21,6 +21,7 @@ module.exports = function(mongoose) {
         filename            :   {type: String, unique: true},
         thumbnail           :   {type: Buffer},
         uploader            :   {type: ObjectId, ref: User},
+        addDate             :   Date,
         tags                :   [String],
         comments            :   [Comment]
     });

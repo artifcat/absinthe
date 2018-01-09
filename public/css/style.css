@@ -139,3 +139,10 @@ label {
     text-align: right;
     margin: 0 auto 1rem;
 }
+
+.thumb {
+    float: left;
+    width: 200px;
+    height: 200px;
+    margin: 5px;
+}

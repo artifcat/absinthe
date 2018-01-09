@@ -150,9 +150,9 @@ module.exports = {
         app.post("/upload", uploadManager.single('image'), function(req, res){
             var thumb;
             if(req.file){
-                sharp(config.imgpath + req.file.filename).resize(config.thumbsize).jpeg().toBuffer(function(err, data, info){
+                sharp(config.imgpath + req.file.filename).resize(null, config.thumbsize).jpeg({quality: 90}).toBuffer(function(err, data, info){
                     if (err) return console.error(err);
-                    var newImg = Models.Image({filename: req.file.filename, thumbnail: data, tags: req.tags, uploader: req.user._id});
+                    var newImg = Models.Image({filename: req.file.filename, addDate: Date.now(), thumbnail: data, tags: req.tags, uploader: req.user._id});
                     newImg.save(function (err, newImg) {
                         if (err) return console.error(err);
                         req.flash('info', "Image uploaded");
@@ -168,6 +168,24 @@ module.exports = {
         });
 
         //api
+        app.get('/api/images', function(req, res){
+            var page = parseInt(req.query.current_page);
+            var pageSize = parseInt(req.query.page_size);
+            var tags = req.query.tags.split(' ');
+
+            Models.Image.find({})
+            .select('filename tags comments uploader addDate')
+            .skip(page*pageSize)
+            .limit(pageSize)
+            .sort('-addDate')
+            .exec(function(err, images){ //TODO: tags
+                if(err) console.error(err);
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify(images, null, 3));
+            });
+            
+        });
+
         app.get('/api/thumb/:id', function(req, res){
             Models.Image.findById(req.params.id, function(err, image){
                 if(err) console.error(err);
@@ -177,6 +195,11 @@ module.exports = {
                 }
             });
             
+        });
+
+        app.use(function(req, res, next){
+            console.log(req.url);
+            res.status(404).end();
         });
 
         //error handling
