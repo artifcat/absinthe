@@ -55,6 +55,10 @@ html, body {
     height: 100%;
 }
 
+b {
+    font-weight: bold;
+}
+
 /* /cssreset */
 
 /* colors:

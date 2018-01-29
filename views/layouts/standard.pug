@@ -14,7 +14,11 @@ html
                         a(href="/upload") Upload image
                         a(href="/account") Account
                         a.right(href="/account/logout") Logout
-                        .right Hello #{user.username}
+                        .right
+                            if session.elevated
+                                p Hello #[b #{user.username}]
+                            else
+                                p Hello #{user.username}
 
                     else
                         a.right(href="/account/login") Login

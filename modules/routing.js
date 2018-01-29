@@ -9,6 +9,8 @@ var session = require('express-session');
 var flash = require('connect-flash');
 var sharp = require('sharp');
 
+var ObjectId = require('mongoose').Types.ObjectId();
+
 var config = require('../config');
 
 var Storage = multer.diskStorage({
@@ -88,11 +90,27 @@ module.exports = {
         }
 
         app.get("/", function(req, res){
-            res.render('index', { page: pageConfig, user: req.user, info: req.flash('info'), error: req.flash('error') });
+            res.render('index', { page: pageConfig, session: req.session, user: req.user, info: req.flash('info'), error: req.flash('error') });
+        });
+
+        app.get("/admin", function(req, res){
+            if(req.user){
+                if(req.session.elevated){
+                    delete req.session.elevated;
+                }
+                else{
+                    if(config.admins.indexOf(req.user._id.toString()) > -1){
+                        req.session.elevated = true;
+                    }
+                }
+            }
+            console.log(typeof(req.user._id));
+            res.redirect('/');
         });
 
         app.get("/account", function(req, res){
-            res.render('account', { page: pageConfig, user: req.user, info: req.flash('info'), error: req.flash('error') });
+            console.log(req.session.elevated);
+            res.render('account', { page: pageConfig, session: req.session, user: req.user, info: req.flash('info'), error: req.flash('error') });
         });
         
         app.get("/account/logout", function(req, res){
@@ -140,7 +158,7 @@ module.exports = {
 
         app.get("/upload", function(req, res){
             if(req.user){
-                res.render('upload', { page: pageConfig, user: req.user, error: req.flash('error')});
+                res.render('upload', { page: pageConfig, session: req.session, user: req.user, error: req.flash('error')});
                 
             }
             else{
@@ -169,10 +187,25 @@ module.exports = {
         });
 
         app.get('/image/:id', function(req, res){
-            Models.Image.find({'_id': req.params.id}, function(err, images){
+            Models.Image.find({'_id': req.params.id})
+            .populate('uploader')
+            .exec(function(err, images){
                 if(err) console.error(err);
-                res.render('image', { image: images[0], page: pageConfig, user: req.user, error: req.flash('error')});
+                var image = images[0];
+                res.render('image', { image: image, page: pageConfig, session: req.session, user: req.user, error: req.flash('error')});
             });
+        });
+
+        app.get('/image/delete/:id', function(req, res){
+            if(req.session.elevated){
+                if(config.admins.indexOf(req.user._id.toString()) > -1){
+                    Models.Image.remove({'_id': req.params.id}, function(err, images){
+                        if(err) console.error(err);
+                        req.flash('info', 'Image removed');
+                        res.redirect('/');
+                    });
+                }
+            }
         });
 
         //api

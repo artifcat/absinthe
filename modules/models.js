@@ -14,19 +14,19 @@ module.exports = function(mongoose) {
         description         :   {type: String}
     });
     var Comment = mongoose.Schema({
-        poster              :   {type: ObjectId, ref: User},
+        poster              :   {type: ObjectId, ref: 'User'},
         content             :   {type: String},
     });
     var Image = mongoose.Schema({
         filename            :   {type: String, unique: true},
         thumbnail           :   {type: Buffer},
-        uploader            :   {type: ObjectId, ref: User},
+        uploader            :   {type: ObjectId, ref: 'User'},
         addDate             :   Date,
         tags                :   [String],
         comments            :   [Comment]
     });
     var Album = mongoose.Schema({
-        creator             :   {type: ObjectId, ref: User},
+        creator             :   {type: ObjectId, ref: 'User'},
         title               :   {type: String},
         images              :   [Image],
         private             :   Boolean

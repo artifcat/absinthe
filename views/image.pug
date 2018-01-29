@@ -11,8 +11,11 @@ append content
         h1 Info
         p.
             #[b Added on:] #[=image.addDate.toLocaleDateString()]
-            #[b Uploaded by:] #[=image.uploader]
+            #[b Uploaded by:] #[=image.uploader.username]
         //Todo: uploader
+        if session.elevated
+            h1 Admin
+            a.delete(href="/image/delete/" + image._id) Delete
     .imageContent
         - var path = image.filename;
         img(src= "/img/" + path)
