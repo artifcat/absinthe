@@ -2,8 +2,9 @@ extends layouts/standard.pug
 
 append content
     .filters
-        input#tags(type='text')
-        button(onclick='search()') Search
+        form(onsubmit='return search()')
+            input#tags(type='text')
+            input(type='submit' value='Search')
     .grid
     .clear
 

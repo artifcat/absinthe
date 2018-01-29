@@ -192,6 +192,7 @@ module.exports = {
             .exec(function(err, images){
                 if(err) console.error(err);
                 var image = images[0];
+                console.log(image.tags)
                 res.render('image', { image: image, page: pageConfig, session: req.session, user: req.user, error: req.flash('error')});
             });
         });
@@ -213,8 +214,22 @@ module.exports = {
             var page = parseInt(req.query.current_page);
             var pageSize = parseInt(req.query.page_size);
             var tags = req.query.tags.split(' ');
+            var query;
 
-            Models.Image.find({})
+            if(tags[0]!=''){
+                var subqueries = [];
+                tags.forEach(element => {
+                    subqueries.push({'tags': element});
+                });
+                query = { "$and" : subqueries };
+            }
+            else{
+                query = {};
+            }
+
+            console.log(query);
+
+            Models.Image.find(query)
             .select('filename tags comments uploader addDate')
             .skip(page*pageSize)
             .limit(pageSize)

@@ -59,3 +59,4 @@ typings/
 
 # configuration file
 config.js
+config_srv.js

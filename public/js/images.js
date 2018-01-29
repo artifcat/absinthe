@@ -9,9 +9,13 @@ thumbs.fetch({
 
 function search(){
     thumbs.queryParams.tags = $('#tags').val()//.replace(' ', '+');
-    $('.grid').empty();
-    thumbs.fetch();
-    grid.render();
+    thumbs.fetch({
+        success: function(model, response, options){
+            $('.grid').empty();
+            grid.render();
+        }
+    });
+    return false;
 }
 
 function getDocHeight() {
