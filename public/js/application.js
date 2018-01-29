@@ -18,10 +18,11 @@ var Image = Backbone.Model.extend({
 var Thumbs = Backbone.PageableCollection.extend({
     model: Image,
     url: '/api/images',
+    mode: 'infinite',
     state: {
         firstPage: 0,
         currentPage: 0,
-        pageSize: 40,
+        pageSize: 32,
         totalRecords: 40,
     },
     queryParams: {
@@ -37,7 +38,7 @@ var ThumbView = Backbone.View.extend({
         //'click': 'alertTest'
     },
     className: 'thumb',
-    newTemplate: _.template('<a><img src="/api/thumb/<%= _id %>"/></a>'),
+    newTemplate: _.template('<a href="/image/<%= _id %>"><img src="/api/thumb/<%= _id %>"/></a>'),
     initialize: function(){
         this.render();
     },
@@ -53,7 +54,6 @@ var ThumbsView = Backbone.View.extend({
     render: function(){
         this.collection.each(function(Image){
             var thumbView = new ThumbView({model: Image});
-            console.log(thumbView);
             $('.grid').append(thumbView.el);
         });
     }

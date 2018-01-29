@@ -64,6 +64,7 @@ module.exports = {
         app.use('/img', express.static(config.imgpath));
         app.use('/js', express.static(__dirname + '/../public/js'));
         app.use('/css', express.static(__dirname + '/../public/css'));
+        app.use('/layout', express.static(__dirname + '/../public/layout'));
 
         //app.use(urlencode);
         //app.use(jsonencode);
@@ -150,7 +151,7 @@ module.exports = {
         app.post("/upload", uploadManager.single('image'), function(req, res){
             var thumb;
             if(req.file){
-                sharp(config.imgpath + req.file.filename).resize(null, config.thumbsize).jpeg({quality: 90}).toBuffer(function(err, data, info){
+                sharp(config.imgpath + req.file.filename).resize(config.thumbsize, config.thumbsize).jpeg({quality: 90}).toBuffer(function(err, data, info){
                     if (err) return console.error(err);
                     var newImg = Models.Image({filename: req.file.filename, addDate: Date.now(), thumbnail: data, tags: req.tags, uploader: req.user._id});
                     newImg.save(function (err, newImg) {
@@ -165,6 +166,13 @@ module.exports = {
                 res.status(500).end();
             }
 
+        });
+
+        app.get('/image/:id', function(req, res){
+            Models.Image.find({'_id': req.params.id}, function(err, images){
+                if(err) console.error(err);
+                res.render('image', { image: images[0], page: pageConfig, user: req.user, error: req.flash('error')});
+            });
         });
 
         //api
@@ -197,6 +205,11 @@ module.exports = {
             
         });
 
+        app.get('/api/error', function(req, res, next){
+            e = new Error('Test error');
+            next(e);
+        });
+
         app.use(function(req, res, next){
             console.log(req.url);
             res.status(404).end();
@@ -217,7 +230,9 @@ module.exports = {
                 res.redirect(req.originalUrl);
             }
             else {
-                next(err)
+                console.error(err);
+                res.status(500);
+                res.render('servererror', { page: pageConfig });
             }
         });
 

@@ -1,0 +1,18 @@
+extends layouts/standard.pug
+
+append vars
+    - bodyClass = 'Image'
+append content
+    .tags 
+        h1 Tags
+        each tag in image.tags
+            a.tag(href='') #{tag}
+        hr
+        h1 Info
+        p.
+            #[b Added on:] #[=image.addDate.toLocaleDateString()]
+            #[b Uploaded by:] #[=image.uploader]
+        //Todo: uploader
+    .imageContent
+        - var path = image.filename;
+        img(src= "/img/" + path)

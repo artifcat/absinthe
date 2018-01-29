@@ -25,11 +25,14 @@ html
                 .error= error
             .content
                 block content
+            .footer
+                p.right Powered by #[a(href="https://github.com/artifcat/absinthe") Absinthe]
+                .clear
             
         block scripts
-            script(src='js/jquery.min.js')
-            script(src='js/underscore-min.js')
-            script(src='js/backbone-min.js')
-            script(src='js/backbone.paginator.min.js')
+            script(src='/js/jquery.min.js')
+            script(src='/js/underscore-min.js')
+            script(src='/js/backbone-min.js')
+            script(src='/js/backbone.paginator.min.js')
 
-            script(src='js/application.js')
+            script(src='/js/application.js')
