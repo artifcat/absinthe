@@ -3,7 +3,10 @@ extends layouts/standard.pug
 append content
     .filters
         form(onsubmit='return search()')
-            input#tags(type='text')
+            if stag
+                input#tags(type='text' value=stag)
+            else
+                input#tags(type='text')
             input(type='submit' value='Search')
     .grid
     .clear

@@ -51,8 +51,8 @@ a:visited {
 }
 
 html, body {
-    width: 100%;
-    height: 100%;
+    -width: 100%;
+    -height: 100%;
 }
 
 b {
@@ -129,6 +129,7 @@ body {
 
 .footer p {
     font-size: 0.7rem;
+    margin: 0.5em 0 3em;
 }
 
 input,

@@ -6,7 +6,15 @@ append content
     .tags 
         h1 Tags
         each tag in image.tags
-            a.tag(href='') #{tag}
+            a.tag #{tag}
+        form#sform(action="/" method="POST")
+            input#tag(type="hidden" name="stag")
+        if user
+            br
+            form(action="/image/"+image._id + "/addtag" method="POST")
+                input.left(name="newtag" type="text")
+                input.left(type="submit" value="Add new tag")
+            .clear
         hr
         h1 Info
         p.
@@ -14,8 +22,12 @@ append content
             #[b Uploaded by:] #[=image.uploader.username]
         //Todo: uploader
         if session.elevated
+            hr
             h1 Admin
             a.delete(href="/image/delete/" + image._id) Delete
     .imageContent
         - var path = image.filename;
         img(src= "/img/" + path)
+
+append scripts
+    script(src='/js/image.js')

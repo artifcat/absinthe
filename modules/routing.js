@@ -93,6 +93,11 @@ module.exports = {
             res.render('index', { page: pageConfig, session: req.session, user: req.user, info: req.flash('info'), error: req.flash('error') });
         });
 
+        app.post("/",urlencode, function(req, res){
+            console.log(req.body.stag)
+            res.render('index', { stag: req.body.stag, page: pageConfig, session: req.session, user: req.user, info: req.flash('info'), error: req.flash('error') });
+        });
+
         app.get("/admin", function(req, res){
             if(req.user){
                 if(req.session.elevated){
@@ -195,6 +200,17 @@ module.exports = {
                 console.log(image.tags)
                 res.render('image', { image: image, page: pageConfig, session: req.session, user: req.user, error: req.flash('error')});
             });
+        });
+
+        app.post('/image/:id/addtag', urlencode, function(req, res){
+            if(req.user){
+                if(req.body.newtag.length > 2){
+                    Models.Image.update({'_id': req.params.id}, {$push: { tags: req.body.newtag }}, function(err, images){
+                        if(err) console.error(err);
+                        res.redirect('/image/' + req.params.id);
+                    });
+                }
+            }
         });
 
         app.get('/image/delete/:id', function(req, res){

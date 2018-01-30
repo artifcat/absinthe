@@ -1,6 +1,7 @@
 var thumbs = new Thumbs();
 var grid = new ThumbsView({collection: thumbs});
 
+thumbs.queryParams.tags = $('#tags').val();
 thumbs.fetch({
     success: function(){
         grid.render();
@@ -8,7 +9,7 @@ thumbs.fetch({
 });
 
 function search(){
-    thumbs.queryParams.tags = $('#tags').val()//.replace(' ', '+');
+    thumbs.queryParams.tags = $('#tags').val();//.replace(' ', '+');
     thumbs.fetch({
         success: function(model, response, options){
             $('.grid').empty();
@@ -18,23 +19,14 @@ function search(){
     return false;
 }
 
-function getDocHeight() {
-    var D = document;
-    return Math.max(
-        D.body.scrollHeight, D.documentElement.scrollHeight,
-        D.body.offsetHeight, D.documentElement.offsetHeight,
-        D.body.clientHeight, D.documentElement.clientHeight
-    );
-}
-
 $(window).on("scroll", function() {
-	var scrollHeight = $(document).height();
-	var scrollPosition = $(window).height() + $(window).scrollTop();
-	if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
-	    console.log("Getting next page...")
+    var scrollHeight = $(document).height();
+    var scrollPosition = window.innerHeight + $(document).scrollTop();
+   
+    //console.log((scrollHeight - scrollPosition))
+	if ((scrollHeight - scrollPosition) <= 10) {
         if(thumbs.hasNextPage()){
             thumbs.getNextPage().done(function () {
-                console.log("It's... here?")
                 grid.render();
             });
         }
